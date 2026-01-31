@@ -7,6 +7,8 @@ import (
 )
 
 func main() {
+	fmt.Println("minterpreter v0.1 | type nothing or ctrl+c to exit")
+
 	scanner := bufio.NewScanner(os.Stdin)
 
 	for {
@@ -22,6 +24,11 @@ func main() {
 		}
 
 		interpreter := NewInterpreter(line)
-		fmt.Println(interpreter.Eval())
+		result, err := interpreter.Eval()
+		if err != nil {
+			fmt.Println("Error:", err)
+			continue
+		}
+		fmt.Println(result)
 	}
 }

@@ -5,6 +5,7 @@ type TokenType int
 const (
 	TokenInteger TokenType = iota
 	TokenPlus
+	TokenMinus
 	TokenEOF
 )
 

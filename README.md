@@ -16,8 +16,9 @@ minterpreter will make use of the following:
 - abstract syntax tree
 
 ## todo
-- [ ] support add, sub, mul, and div
-- [ ] support numbers of arbitrary length
+- [x] support add, sub, mul, and div
+- [x] support numbers of arbitrary length
+- [ ] write tests
 - [ ] support parenthesis/operator precedence
 - [ ] add exponents
 - [ ] add trig functions
