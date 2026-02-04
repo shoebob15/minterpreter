@@ -6,6 +6,8 @@ const (
 	TokenInteger TokenType = iota
 	TokenPlus
 	TokenMinus
+	TokenMultiply
+	TokenDivide
 	TokenEOF
 )
 
