@@ -53,9 +53,14 @@ func (i *Interpreter) getNextToken() (Token, error) {
 		}
 
 		if i.currentChar >= '0' && i.currentChar <= '9' {
+			value, err := i.integer()
+			if err != nil {
+				return Token{}, err
+			}
+
 			return Token{
 				Type:  TokenInteger,
-				Value: i.integer(),
+				Value: value,
 			}, nil
 		}
 
@@ -101,7 +106,7 @@ func (i *Interpreter) eat(t TokenType) error {
 	return nil
 }
 
-func (i *Interpreter) integer() int {
+func (i *Interpreter) integer() (int, error) {
 	builder := strings.Builder{}
 	ch := i.currentChar
 
@@ -113,10 +118,10 @@ func (i *Interpreter) integer() int {
 
 	result, err := strconv.Atoi(builder.String())
 	if err != nil {
-		panic("an internal error occurred")
+		return 0, fmt.Errorf("invalid integer at 0:%d", i.pos)
 	}
 
-	return result
+	return result, nil
 }
 
 func (i *Interpreter) skipWhitespace() {
