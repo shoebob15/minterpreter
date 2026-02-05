@@ -23,12 +23,18 @@ func main() {
 			break
 		}
 
-		interpreter := NewInterpreter(line)
+		interpreter, err := NewInterpreter(line)
+		handleError(err)
+
 		result, err := interpreter.Eval()
-		if err != nil {
-			fmt.Println("Error:", err)
-			continue
-		}
+		handleError(err)
 		fmt.Println(result)
+	}
+}
+
+// will print error but not end program
+func handleError(err error) {
+	if err != nil {
+		fmt.Printf("error: %s", err)
 	}
 }

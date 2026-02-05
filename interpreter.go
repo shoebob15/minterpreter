@@ -56,6 +56,10 @@ func (i *Interpreter) eat(t TokenType) error {
 	return nil
 }
 
-func NewInterpreter(input string) *Interpreter {
-	return &Interpreter{lexer: NewLexer(input)}
+func NewInterpreter(input string) (*Interpreter, error) {
+	lexer, err := NewLexer(input)
+	if err != nil {
+		return &Interpreter{}, err
+	}
+	return &Interpreter{lexer: lexer}, nil
 }

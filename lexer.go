@@ -79,6 +79,9 @@ func (l *Lexer) getNextToken() (Token, error) {
 	return Token{Type: TokenEOF}, nil
 }
 
-func NewLexer(input string) *Lexer {
-	return &Lexer{input: input, pos: 0, currentChar: input[0]}
+func NewLexer(input string) (*Lexer, error) {
+	if len(input) < 1 {
+		return &Lexer{}, fmt.Errorf("invalid input for lexer: %s", input)
+	}
+	return &Lexer{input: input, pos: 0, currentChar: input[0]}, nil
 }
