@@ -12,26 +12,29 @@ type Interpreter struct {
 func (i *Interpreter) Eval() (int, error) {
 	var err error
 	i.currentToken, err = i.lexer.getNextToken()
-
 	if err != nil {
 		return 0, err
 	}
 
 	left := i.currentToken
-	err = i.eat(TokenInteger)
+	if err := i.eat(TokenInteger); err != nil {
+		return 0, err
+	}
 
 	op := i.currentToken
 
 	if op.Type == TokenPlus {
-		err = i.eat(TokenPlus)
+		if err := i.eat(TokenPlus); err != nil {
+			return 0, err
+		}
 	} else {
-		err = i.eat(TokenMinus)
+		if err := i.eat(TokenMinus); err != nil {
+			return 0, err
+		}
 	}
 
 	right := i.currentToken
-	err = i.eat(TokenInteger)
-
-	if err != nil {
+	if err := i.eat(TokenInteger); err != nil {
 		return 0, err
 	}
 
