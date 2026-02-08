@@ -28,13 +28,15 @@ func main() {
 
 		result, err := interpreter.Eval()
 		handleError(err)
-		fmt.Println(result)
+		if err == nil {
+			fmt.Println(result)
+		}
 	}
 }
 
 // will print error but not end program
 func handleError(err error) {
 	if err != nil {
-		fmt.Printf("error: %s", err)
+		fmt.Printf("error: %s\n", err)
 	}
 }

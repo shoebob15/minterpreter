@@ -73,6 +73,16 @@ func (l *Lexer) getNextToken() (Token, error) {
 			return Token{Type: TokenMinus}, nil
 		}
 
+		if l.currentChar == '*' {
+			l.advance()
+			return Token{Type: TokenMultiply}, nil
+		}
+
+		if l.currentChar == '/' {
+			l.advance()
+			return Token{Type: TokenDivide}, nil
+		}
+
 		return Token{}, fmt.Errorf("unrecognized token at 0:%d", l.pos)
 	}
 
