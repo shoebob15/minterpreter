@@ -18,7 +18,7 @@ minterpreter will make use of the following:
 ## todo
 - [x] support add, sub, mul, and div
 - [x] support numbers of arbitrary length
-- [ ] write tests
+- [x] write tests
 - [ ] support parenthesis/operator precedence
 - [ ] add exponents
 - [ ] add trig functions
