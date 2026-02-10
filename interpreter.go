@@ -10,38 +10,66 @@ type Interpreter struct {
 }
 
 func (i *Interpreter) Eval() (int, error) {
-	var err error
-	i.currentToken, err = i.lexer.getNextToken()
+	result, err := i.term()
+
 	if err != nil {
 		return 0, err
 	}
 
-	left := i.currentToken
+	for i.currentToken.Type == TokenPlus || i.currentToken.Type == TokenMinus {
+		token := i.currentToken
+		i.eat(token.Type)
+
+		term, err := i.term()
+		if err != nil {
+			return 0, err
+		}
+
+		switch token.Type {
+		case TokenPlus:
+			result += term
+
+		case TokenMinus:
+			result -= term
+		}
+	}
+
+	return result, nil
+}
+
+func (i *Interpreter) factor() (int, error) {
+	value := i.currentToken.Value
 	if err := i.eat(TokenInteger); err != nil {
 		return 0, err
 	}
 
-	op := i.currentToken
+	return value, nil
+}
 
-	if op.Type == TokenPlus {
-		if err := i.eat(TokenPlus); err != nil {
-			return 0, err
-		}
-	} else {
-		if err := i.eat(TokenMinus); err != nil {
-			return 0, err
-		}
-	}
-
-	right := i.currentToken
-	if err := i.eat(TokenInteger); err != nil {
+func (i *Interpreter) term() (int, error) {
+	result, err := i.factor()
+	if err != nil {
 		return 0, err
 	}
 
-	if op.Type == TokenPlus {
-		return left.Value + right.Value, nil
+	for i.currentToken.Type == TokenMultiply || i.currentToken.Type == TokenDivide {
+		token := i.currentToken
+		i.eat(token.Type)
+
+		factor, err := i.factor()
+		if err != nil {
+			return 0, err
+		}
+
+		switch token.Type {
+		case TokenMultiply:
+			result *= factor
+		case TokenDivide:
+			result /= factor
+		}
 	}
-	return left.Value - right.Value, nil
+
+	return result, nil
 }
 
 func (i *Interpreter) eat(t TokenType) error {
@@ -53,7 +81,8 @@ func (i *Interpreter) eat(t TokenType) error {
 
 		i.currentToken = token
 	} else {
-		return fmt.Errorf("unexpected token at 0:%d", i.lexer.pos)
+		return fmt.Errorf("expected %v, got %v at index %d",
+			t, i.currentToken.Type, i.lexer.pos)
 	}
 
 	return nil
@@ -62,7 +91,16 @@ func (i *Interpreter) eat(t TokenType) error {
 func NewInterpreter(input string) (*Interpreter, error) {
 	lexer, err := NewLexer(input)
 	if err != nil {
-		return &Interpreter{}, err
+		return nil, err
 	}
-	return &Interpreter{lexer: lexer}, nil
+
+	token, err := lexer.getNextToken()
+	if err != nil {
+		return nil, err
+	}
+
+	return &Interpreter{
+		lexer:        lexer,
+		currentToken: token,
+	}, nil
 }

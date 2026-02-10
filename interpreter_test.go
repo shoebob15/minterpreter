@@ -10,14 +10,16 @@ func TestInterpreterEval(t *testing.T) {
 		expected    int
 		shouldError bool
 	}{
-		{"2+3", 5, false},
-		{"4 + 6", 10, false},
-		{"12 + 25", 37, false},
-		{"2-3", -1, false},
-		{"4 - 6", -2, false},
-		{"12 - 25", -13, false},
-		{"-", 0, true},
-		{":", 0, true},
+		{"2+3", 5, false},        // addition
+		{"4 + 6", 10, false},     // whitespace
+		{"12 + 25", 37, false},   // abritrary length integers
+		{"4 - 6", -2, false},     // subraction
+		{"12 - 25", -13, false},  // negative result
+		{"5 * 6", 30, false},     // multiplication
+		{"20 / 5", 4, false},     // division
+		{"18 * 2 -5", 31, false}, // pemdas
+		{"5 + 20*4", 85, false},  // more pemdas
+		{"5 += 0", 0, true},      // error handling
 	}
 
 	for _, tt := range tests {
