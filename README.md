@@ -15,11 +15,14 @@ minterpreter will make use of the following:
 - pratt parsing
 - abstract syntax tree
 
+## building/running
+to run the project, either build and run from source using `go run .`, or download the latest release from the releases page (TODO)
+
 ## todo
 - [x] support add, sub, mul, and div
 - [x] support numbers of arbitrary length
 - [x] write tests
-- [ ] support parenthesis/operator precedence
+- [x] support parenthesis/operator precedence
 - [ ] add exponents
 - [ ] add trig functions
 - [ ] add numerical constants (pi, e, etc.)
