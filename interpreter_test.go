@@ -19,6 +19,7 @@ func TestInterpreterEval(t *testing.T) {
 		{"20 / 5", 4, false},     // division
 		{"18 * 2 -5", 31, false}, // pemdas
 		{"5 + 20*4", 85, false},  // more pemdas
+		{"5 * (7-2)", 25, false}, // parenthesis
 		{"5 += 0", 0, true},      // error handling
 	}
 

@@ -38,12 +38,27 @@ func (i *Interpreter) Eval() (int, error) {
 }
 
 func (i *Interpreter) factor() (int, error) {
-	value := i.currentToken.Value
-	if err := i.eat(TokenInteger); err != nil {
-		return 0, err
+	token := i.currentToken
+
+	if token.Type == TokenInteger {
+		if err := i.eat(TokenInteger); err != nil {
+			return 0, err
+		}
+		return token.Value, nil
 	}
 
-	return value, nil
+	if token.Type == TokenLParen {
+		i.eat(TokenLParen)
+		result, err := i.Eval()
+		if err != nil {
+			return 0, err
+		}
+		i.eat(TokenRParen)
+		return result, nil
+	}
+
+	return 0, fmt.Errorf("incorrect parenthesis")
+
 }
 
 func (i *Interpreter) term() (int, error) {

@@ -83,6 +83,16 @@ func (l *Lexer) getNextToken() (Token, error) {
 			return Token{Type: TokenDivide}, nil
 		}
 
+		if l.currentChar == '(' {
+			l.advance()
+			return Token{Type: TokenLParen}, nil
+		}
+
+		if l.currentChar == ')' {
+			l.advance()
+			return Token{Type: TokenRParen}, nil
+		}
+
 		return Token{}, fmt.Errorf("unrecognized token at 0:%d", l.pos)
 	}
 
