@@ -3,7 +3,7 @@ package main
 type TokenType int
 
 const (
-	TokenInteger TokenType = iota
+	TokenNumber TokenType = iota
 	TokenPlus
 	TokenMinus
 	TokenMultiply
@@ -15,8 +15,8 @@ const (
 
 func (t TokenType) String() string {
 	switch t {
-	case TokenInteger:
-		return "Integer"
+	case TokenNumber:
+		return "Number"
 	case TokenPlus:
 		return "Plus"
 	case TokenMinus:
@@ -38,5 +38,5 @@ func (t TokenType) String() string {
 
 type Token struct {
 	Type  TokenType
-	Value int
+	Value float64
 }

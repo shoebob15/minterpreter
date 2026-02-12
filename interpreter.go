@@ -9,7 +9,7 @@ type Interpreter struct {
 	currentToken Token
 }
 
-func (i *Interpreter) Eval() (int, error) {
+func (i *Interpreter) Eval() (float64, error) {
 	result, err := i.term()
 
 	if err != nil {
@@ -37,11 +37,11 @@ func (i *Interpreter) Eval() (int, error) {
 	return result, nil
 }
 
-func (i *Interpreter) factor() (int, error) {
+func (i *Interpreter) factor() (float64, error) {
 	token := i.currentToken
 
-	if token.Type == TokenInteger {
-		if err := i.eat(TokenInteger); err != nil {
+	if token.Type == TokenNumber {
+		if err := i.eat(TokenNumber); err != nil {
 			return 0, err
 		}
 		return token.Value, nil
@@ -61,7 +61,7 @@ func (i *Interpreter) factor() (int, error) {
 
 }
 
-func (i *Interpreter) term() (int, error) {
+func (i *Interpreter) term() (float64, error) {
 	result, err := i.factor()
 	if err != nil {
 		return 0, err

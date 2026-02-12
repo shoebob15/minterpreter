@@ -7,7 +7,7 @@ import (
 func TestInterpreterEval(t *testing.T) {
 	var tests = []struct {
 		input       string
-		expected    int
+		expected    float64
 		shouldError bool
 	}{
 		{"2+3", 5, false},        // addition
@@ -32,7 +32,7 @@ func TestInterpreterEval(t *testing.T) {
 
 			result, err := interpreter.Eval()
 			if result != tt.expected || (err != nil && !tt.shouldError) {
-				t.Errorf("failed test: expected %d, got %d; err: %s",
+				t.Errorf("failed test: expected %v, got %v; err: %s",
 					tt.expected,
 					result,
 					err)

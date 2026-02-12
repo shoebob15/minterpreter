@@ -31,7 +31,7 @@ func main() {
 
 		result, err := interpreter.Eval()
 		if err == nil {
-			fmt.Printf("=> %d\n", result)
+			fmt.Printf("=> %v\n", result)
 		} else {
 			fmt.Println("error: ", err)
 			continue

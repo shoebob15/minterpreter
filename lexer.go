@@ -28,20 +28,31 @@ func (l *Lexer) skipWhitespace() {
 	}
 }
 
-func (l *Lexer) integer() (int, error) {
+func (l *Lexer) number() (float64, error) {
 	builder := strings.Builder{}
+	dotCount := 0
 
-	for l.currentChar != 0 && l.currentChar >= '0' && l.currentChar <= '9' {
+	for l.currentChar != 0 && (isDigit(l.currentChar) || l.currentChar == '.') {
+		if l.currentChar == '.' {
+			dotCount++
+			if dotCount > 1 {
+				return 0, fmt.Errorf("too many dots")
+			}
+		}
 		builder.WriteByte(l.currentChar)
 		l.advance()
 	}
 
-	result, err := strconv.Atoi(builder.String())
+	result, err := strconv.ParseFloat(builder.String(), 64)
 	if err != nil {
-		return 0, fmt.Errorf("invalid integer at 0:%d", l.pos)
+		return 0, fmt.Errorf("invalid number at 0:%d", l.pos)
 	}
 
 	return result, nil
+}
+
+func isDigit(c byte) bool {
+	return c >= '0' && c <= '9'
 }
 
 func (l *Lexer) getNextToken() (Token, error) {
@@ -52,13 +63,13 @@ func (l *Lexer) getNextToken() (Token, error) {
 		}
 
 		if l.currentChar >= '0' && l.currentChar <= '9' {
-			value, err := l.integer()
+			value, err := l.number()
 			if err != nil {
 				return Token{}, err
 			}
 
 			return Token{
-				Type:  TokenInteger,
+				Type:  TokenNumber,
 				Value: value,
 			}, nil
 		}
