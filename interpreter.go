@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 )
 
 type Interpreter struct {
@@ -9,6 +10,7 @@ type Interpreter struct {
 	currentToken Token
 }
 
+// Eval : Term (Plus | Minus) Term
 func (i *Interpreter) Eval() (float64, error) {
 	result, err := i.term()
 
@@ -37,6 +39,56 @@ func (i *Interpreter) Eval() (float64, error) {
 	return result, nil
 }
 
+// TERM : Factor (Multiply | Divide) Factor
+func (i *Interpreter) term() (float64, error) {
+	result, err := i.power()
+	if err != nil {
+		return 0, err
+	}
+
+	for i.currentToken.Type == TokenMultiply || i.currentToken.Type == TokenDivide {
+		token := i.currentToken
+		i.eat(token.Type)
+
+		factor, err := i.power()
+		if err != nil {
+			return 0, err
+		}
+
+		switch token.Type {
+		case TokenMultiply:
+			result *= factor
+		case TokenDivide:
+			result /= factor
+		}
+	}
+
+	return result, nil
+}
+
+// POWER : factor Pow factor
+func (i *Interpreter) power() (float64, error) {
+	result, err := i.factor()
+	if err != nil {
+		return 0, err
+	}
+
+	if i.currentToken.Type == TokenPow {
+		if err := i.eat(TokenPow); err != nil {
+			return 0, err
+		}
+
+		power, err := i.power()
+		if err != nil {
+			return 0, err
+		}
+		result = math.Pow(result, power)
+	}
+
+	return result, nil
+}
+
+// FACTOR : Number | LParen Expr RParen
 func (i *Interpreter) factor() (float64, error) {
 	token := i.currentToken
 
@@ -59,32 +111,6 @@ func (i *Interpreter) factor() (float64, error) {
 
 	return 0, fmt.Errorf("incorrect parenthesis")
 
-}
-
-func (i *Interpreter) term() (float64, error) {
-	result, err := i.factor()
-	if err != nil {
-		return 0, err
-	}
-
-	for i.currentToken.Type == TokenMultiply || i.currentToken.Type == TokenDivide {
-		token := i.currentToken
-		i.eat(token.Type)
-
-		factor, err := i.factor()
-		if err != nil {
-			return 0, err
-		}
-
-		switch token.Type {
-		case TokenMultiply:
-			result *= factor
-		case TokenDivide:
-			result /= factor
-		}
-	}
-
-	return result, nil
 }
 
 func (i *Interpreter) eat(t TokenType) error {

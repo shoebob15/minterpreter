@@ -104,6 +104,11 @@ func (l *Lexer) getNextToken() (Token, error) {
 			return Token{Type: TokenRParen}, nil
 		}
 
+		if l.currentChar == '^' {
+			l.advance()
+			return Token{Type: TokenPow}, nil
+		}
+
 		return Token{}, fmt.Errorf("unrecognized token at 0:%d", l.pos)
 	}
 

@@ -10,6 +10,7 @@ const (
 	TokenDivide
 	TokenLParen
 	TokenRParen
+	TokenPow
 	TokenEOF
 )
 
@@ -31,6 +32,8 @@ func (t TokenType) String() string {
 		return "LParen"
 	case TokenRParen:
 		return "RParen"
+	case TokenPow:
+		return "Pow"
 	default:
 		return "Unknown"
 	}
