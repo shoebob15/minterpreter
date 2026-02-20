@@ -25,12 +25,12 @@ func TestInterpreterEval(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.input, func(t *testing.T) {
-			interpreter, err := NewInterpreter(tt.input)
+			interpreter, err := CreateInterpreterInstance(tt.input)
 			if err != nil && !tt.shouldError {
 				t.Error("failed test: could not create interpreter")
 			}
 
-			result, err := interpreter.Eval()
+			result, err := interpreter.Interpret()
 			if result != tt.expected || (err != nil && !tt.shouldError) {
 				t.Errorf("failed test: expected %v, got %v; err: %s",
 					tt.expected,
@@ -39,4 +39,23 @@ func TestInterpreterEval(t *testing.T) {
 			}
 		})
 	}
+}
+
+func CreateInterpreterInstance(line string) (*Interpreter, error) {
+	lexer, err := NewLexer(line)
+	if err != nil {
+		return nil, err
+	}
+
+	parser, err := NewParser(lexer)
+	if err != nil {
+		return nil, err
+	}
+
+	interpreter, err := NewInterpreter(parser)
+	if err != nil {
+		return nil, err
+	}
+
+	return interpreter, nil
 }

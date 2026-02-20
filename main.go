@@ -3,11 +3,14 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"os"
 )
 
 func main() {
 	fmt.Println("minterpreter v0.1 | type nothing or ctrl+c to exit")
+
+	log.Default().SetFlags(0)
 
 	scanner := bufio.NewScanner(os.Stdin)
 
@@ -23,13 +26,25 @@ func main() {
 			break
 		}
 
-		interpreter, err := NewInterpreter(line)
+		lexer, err := NewLexer(line)
 		if err != nil {
-			fmt.Println("error: ", err)
+			log.Default().Printf("%v", err)
 			continue
 		}
 
-		result, err := interpreter.Eval()
+		parser, err := NewParser(lexer)
+		if err != nil {
+			log.Default().Printf("%v", err)
+			continue
+		}
+
+		interpreter, err := NewInterpreter(parser)
+		if err != nil {
+			log.Default().Printf("%v", err)
+			continue
+		}
+
+		result, err := interpreter.Interpret()
 		if err == nil {
 			fmt.Printf("=> %v\n", result)
 		} else {
